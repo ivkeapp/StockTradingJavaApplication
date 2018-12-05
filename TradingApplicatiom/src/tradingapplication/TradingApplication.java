@@ -59,6 +59,16 @@ public class TradingApplication extends javax.swing.JFrame {
         return listOfStockSymbols;
     }
     
+    private double diffPercentage() {
+        ImportExcel excelread = new ImportExcel();
+        //manual path selection of import files, to be done
+        String path1 = jTextField2.getText();
+        //assuming that the difference percentage is fixed
+        double diffPercentage = excelread.importDiffPercentageFromPredefinedExcelFile(path1);
+
+        return diffPercentage;
+    }
+    
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
