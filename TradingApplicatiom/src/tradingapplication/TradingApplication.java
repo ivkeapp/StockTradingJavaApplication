@@ -5,6 +5,10 @@
  */
 package tradingapplication;
 
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Zarkovic
@@ -194,6 +198,14 @@ public class TradingApplication extends javax.swing.JFrame {
     }
     
     public static void main(String args[]) {
+        
+        CustomLogger log = new CustomLogger();
+        try {
+            log.addToLog("test text");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(TradingApplication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        log.writeLogToDisk();
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
