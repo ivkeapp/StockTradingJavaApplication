@@ -66,19 +66,35 @@ public class TradingApplication extends javax.swing.JFrame {
 
     private ArrayList<String> listOfStockSymbols() {
         ImportExcel excelread = new ImportExcel();
+        ArrayList<String> listOfStockSymbols = new Thread("1") {
+            public ArrayList<String> run2() {
+                System.out.println("Thread: " + getName() + " running");
+                //importing id symbols and putting it to list of strings
+                return excelread.importSymbolsFromPredefinedExcelFile(path2);
+            }
+        }.run2();
+
         //manual path selection of import files, to be done
-        String path1 = jTextField1.getText();
+        path2 = jTextField2.getText();
+
         //importing id symbols and putting it to list of strings
-        ArrayList<String> listOfStockSymbols = excelread.importSymbolsFromPredefinedExcelFile(path2);
+        //ArrayList<String> listOfStockSymbols = excelread.importSymbolsFromPredefinedExcelFile(path2);
         return listOfStockSymbols;
     }
 
     private double diffPercentage() {
         ImportExcel excelread = new ImportExcel();
         //manual path selection of import files, to be done
-        String path2 = jTextField2.getText();
+        path1 = jTextField1.getText();
         //assuming that the difference percentage is fixed
-        double diffPercentage = excelread.importDiffPercentageFromPredefinedExcelFile(path1);
+        double diffPercentage = new Thread("2") {
+            public double run2() {
+                System.out.println("Thread: " + getName() + " running");
+                //importing id symbols and putting it to list of strings
+                return excelread.importDiffPercentageFromPredefinedExcelFile(path1);
+            }
+        }.run2();
+        //double diffPercentage = excelread.importDiffPercentageFromPredefinedExcelFile(path1);
 
         return diffPercentage;
     }
@@ -86,21 +102,34 @@ public class TradingApplication extends javax.swing.JFrame {
     private Object[][] addingValuesToArrays(ArrayList<String> listOfStockSymbols) throws JSONException, IOException {
         ConnectionToAPI connectionToAPI = new ConnectionToAPI();
         Object[][] mainDataArrays = new Object[listOfStockSymbols.size() + 1][5];
-        //defining rows header - could be in another method
-        mainDataArrays[0][0] = "Symbol";
-        mainDataArrays[0][1] = "PDC";
-        mainDataArrays[0][2] = "SDO";
-        mainDataArrays[0][3] = "Difference";
-        mainDataArrays[0][4] = "Direction";
+        new Thread("3") {
+            public void run() {
+                System.out.println("Thread: " + getName() + " running");
+                //defining rows header - could be in another method
+                mainDataArrays[0][0] = "Symbol";
+                mainDataArrays[0][1] = "PDC";
+                mainDataArrays[0][2] = "SDO";
+                mainDataArrays[0][3] = "Difference";
+                mainDataArrays[0][4] = "Direction";
+            }
+        }.start();
+
         int br = 1;
         //System.out.println("Size of a symbols list: " + listOfStockSymbols.size());
         //adding values to 2d array
         //making an object which hold data to be exported as Excel file
         //using jdbctoapi class methods for getting response and parsing it to an objects
         //passing id symbol and fixed difference percentage(?)
+        double differencePercentage
+                = new Thread("4") {
+                    public double run2() {
+                        System.out.println("Thread: " + getName() + " running");
+                        return diffPercentage();
+                    }
+                }.run2();
+
         for (String s : listOfStockSymbols) {
-            Object[] helpArray;
-            helpArray = connectionToAPI.connectToAPIAndParseValues(s, diffPercentage());
+            Object[] helpArray = connectionToAPI.connectToAPIAndParseValues(s, differencePercentage);
             if (helpArray[4] != "NO DATA") {
                 for (int i = 0; i < 5; i++) {
                     mainDataArrays[br][i] = helpArray[i];
