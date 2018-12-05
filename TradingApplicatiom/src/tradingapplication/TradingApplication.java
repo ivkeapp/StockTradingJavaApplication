@@ -111,7 +111,29 @@ public class TradingApplication extends javax.swing.JFrame {
 
         //init cell style
         ExcelSheetCellStylesLibrary style = new ExcelSheetCellStylesLibrary();
-        
+        Map<String, CellStyle> styles = style.createStyles(workbook);
+
+        int rowNum = 0;
+        System.out.println("Writing Excel file...");
+        log.addToLog("Creating Excel file." + "\n");
+        //looping through 2d array and adding values to the excel sheet
+        if (mainDataArrays != null) {
+            for (int i = 0; i < mainDataArrays.length; i++) {
+                Row row = sheet.createRow(rowNum++);
+                int colNum = 0;
+                for (int j = 0; j < 5; j++) {
+                    Cell cell = row.createCell(colNum++);
+                    if (i == 0) {
+                        cell.setCellStyle(styles.get("header"));
+                    }
+                    if (mainDataArrays[i][j] instanceof String) {
+                        cell.setCellValue((String) mainDataArrays[i][j]);
+                    } else if (mainDataArrays[i][j] instanceof Double) {
+                        cell.setCellValue((Double) mainDataArrays[i][j]);
+                    }
+                }
+            }
+        }
         return workbook;
     }
     
