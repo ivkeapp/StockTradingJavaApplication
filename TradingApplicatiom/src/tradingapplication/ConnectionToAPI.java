@@ -11,6 +11,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -123,6 +124,50 @@ public class ConnectionToAPI {
             log.addToLog(System.getProperty("line.separator"));
             return new Object[]{symbol.toUpperCase(), 0, 0, 0, "NO DATA"};
         }
+    }
+    
+    public Object[] connectToAPIAndParseValues(String symbol, double DiffPercentage) throws JSONException, IOException {
+
+        try {
+            CustomLogger log = new CustomLogger();
+            log.addToLog("Getting values for: " + symbol);
+            //calling gettingresponse method and initializing response object
+            String response = gettingResponseFromAPI(symbol);
+            //calling method for parsing response in JSON object
+            JSONObject result = parsingJSON(symbol, response);
+
+            if (result != null) {
+
+                log.addToLog("Adding: " + symbol.toUpperCase());
+                Double PDC = gettingPDCValues(result);
+                Double SDO = gettingSDOValues(result);
+                System.out.println("Data imported");
+
+                //if(gettingSDOValues>gettingPDCValues){
+                //if (gettingSDOValues >= (gettingPDCValues + (gettingPDCValues * (DiffPercentage / 100)))) {
+                if (SDO > PDC) {
+                    return formulaMethod(symbol, PDC, SDO, DiffPercentage);
+                } else {
+                    log.addToLog(System.getProperty("line.separator"));
+                    return new Object[]{symbol.toUpperCase(), 0, 0, 0, "NO DATA"};
+                }
+            } else {
+                log.addToLog(System.getProperty("line.separator"));
+                return new Object[]{symbol.toUpperCase(), 0, 0, 0, "NO DATA"};
+            }
+
+        } catch (ParseException | FileNotFoundException e) {
+            e.printStackTrace();
+            CustomLogger log = new CustomLogger();
+            log.addToLog("Error! File is not found");
+            log.addToLog(e.getLocalizedMessage());
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            CustomLogger log = new CustomLogger();
+            log.addToLog(ioe.getLocalizedMessage());
+        }
+        //log.addToLog(System.getProperty("line.separator"));
+        return new Object[]{symbol.toUpperCase(), 0, 0, 0, "NO DATA"};
     }
 
 }
