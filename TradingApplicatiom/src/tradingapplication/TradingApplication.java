@@ -159,6 +159,32 @@ public class TradingApplication extends javax.swing.JFrame {
     
     }
     
+    void mainMethod() throws FileNotFoundException {
+
+        try {
+            //help string
+            String APIUrl = "https://api.iextrading.com/1.0/stock/market/batch?symbols=goog,aapl&types=quote&filter=previousClose,open";
+
+            ArrayList<String> listOfStockSymbols = listOfStockSymbols();
+            //instantiate 2d array for values which size is equal to a size of symbols list plus rows header
+            Object[][] mainDataArrays = addingValuesToArrays(listOfStockSymbols);
+            log.addToLog("Values have been successfully loaded from IEXTrading API.");
+            //apache poi libraries for creating excel file
+            XSSFWorkbook workbook = makingWorkbook(mainDataArrays);
+
+            //writing output .xlsx file to the disk with current date parrameter
+            writtingExcelFile(workbook);
+
+        } catch (FileNotFoundException ex) {
+            log.addToLog("Exception cought:"+ex);
+        } catch (JSONException ex) {
+            log.addToLog("Exception cought:"+ex);
+        } catch (IOException ex) {
+            log.addToLog("Exception cought:"+ex);
+        }
+
+    }
+    
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
