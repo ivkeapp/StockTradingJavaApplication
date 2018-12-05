@@ -9,14 +9,16 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
  * @author Zarkovic
  */
 public class ConnectionToAPI {
-    
+
     private String gettingResponseFromAPI(String symbol) throws FileNotFoundException {
 
         try {
@@ -24,7 +26,7 @@ public class ConnectionToAPI {
 
             //url which hold path to api filtered by symbol
             String url = "https://api.iextrading.com/1.0/stock/market/batch?symbols=" + symbol + "&types=quote&filter=previousClose,open";
-            
+
             CustomLogger log = new CustomLogger();
             log.addToLog("Connecting to IEXTrading API: " + url + "\n");
 
@@ -47,19 +49,44 @@ public class ConnectionToAPI {
             return sResponse;
         } catch (MalformedURLException ex) {
             CustomLogger log = new CustomLogger();
-            log.addToLog("Exception caught: "+ex);
+            log.addToLog("Exception caught: " + ex);
         } catch (UnknownHostException uhe) {
             System.out.println("No connection!");
             CustomLogger log = new CustomLogger();
-            log.addToLog("Exception caught: "+uhe);
+            log.addToLog("Exception caught: " + uhe);
         } catch (ProtocolException ex) {
             CustomLogger log = new CustomLogger();
-            log.addToLog("Exception caught: "+ex);
+            log.addToLog("Exception caught: " + ex);
         } catch (IOException ex) {
             CustomLogger log = new CustomLogger();
-            log.addToLog("Exception caught: "+ex);
+            log.addToLog("Exception caught: " + ex);
         }
         return null;
     }
     
+    private JSONObject parsingJSON(String symbol, String response) throws ParseException {
+
+        //parsing response in JSON object
+        JSONParser parser = new JSONParser();
+        JSONObject json = (JSONObject) parser.parse(response);
+        JSONObject result = (JSONObject) json.get(symbol.toUpperCase());
+        return result;
+    }
+
+    private double gettingPDCValues(JSONObject result) {
+
+        JSONObject result2 = (JSONObject) result.get("quote");
+        String StringPDC = result2.get("previousClose").toString();
+        Double PDC = Double.parseDouble(StringPDC);
+        return PDC;
+    }
+
+    private double gettingSDOValues(JSONObject result) {
+
+        JSONObject result2 = (JSONObject) result.get("quote");
+        String StringPDC = result2.get("open").toString();
+        Double SDO = Double.parseDouble(StringPDC);
+        return SDO;
+    }
+
 }
