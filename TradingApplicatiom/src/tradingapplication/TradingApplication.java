@@ -6,6 +6,9 @@
 package tradingapplication;
 
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,11 +28,25 @@ public class TradingApplication extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel mainLabel;
-
+    private String stringDate;
+    CustomLogger log = new CustomLogger();
+    
     public TradingApplication(){
         this.setLocationRelativeTo(null);
         //this.setVisible(true);
         initComponents();
+    }
+    
+    private String stringDate() throws FileNotFoundException {
+        //getting date and time from local machine
+        LocalTime time = LocalTime.now();
+        LocalDate date = LocalDate.now();
+        //setting date format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYYMMdd");
+        //string as fileoutputs parameter
+        stringDate = formatter.format(date);
+        log.addToLog("Date: " + stringDate + "  Time: " + time.toString());
+        return stringDate;
     }
     
     private void initComponents() {
@@ -199,13 +216,7 @@ public class TradingApplication extends javax.swing.JFrame {
     
     public static void main(String args[]) {
         
-        CustomLogger log = new CustomLogger();
-        try {
-            log.addToLog("test text");
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(TradingApplication.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        log.writeLogToDisk();
+        
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
