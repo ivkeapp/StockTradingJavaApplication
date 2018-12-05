@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,6 +48,15 @@ public class TradingApplication extends javax.swing.JFrame {
         stringDate = formatter.format(date);
         log.addToLog("Date: " + stringDate + "  Time: " + time.toString());
         return stringDate;
+    }
+    
+    private ArrayList<String> listOfStockSymbols() {
+        ImportExcel excelread = new ImportExcel();
+        //manual path selection of import files, to be done
+        String path2 = jTextField2.getText();
+        //importing id symbols and putting it to list of strings
+        ArrayList<String> listOfStockSymbols = excelread.importSymbolsFromPredefinedExcelFile(path2);
+        return listOfStockSymbols;
     }
     
     private void initComponents() {
