@@ -5,6 +5,7 @@
  */
 package tradingapplication;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -39,14 +42,16 @@ public class TradingApplication extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel mainLabel;
     private String stringDate;
+    private String path1 = "";
+    private String path2 = "";
     CustomLogger log = new CustomLogger();
-    
-    public TradingApplication(){
+
+    public TradingApplication() {
         this.setLocationRelativeTo(null);
         //this.setVisible(true);
         initComponents();
     }
-    
+
     private String stringDate() throws FileNotFoundException {
         //getting date and time from local machine
         LocalTime time = LocalTime.now();
@@ -58,7 +63,7 @@ public class TradingApplication extends javax.swing.JFrame {
         log.addToLog("Date: " + stringDate + "  Time: " + time.toString());
         return stringDate;
     }
-    
+
     private ArrayList<String> listOfStockSymbols() {
         ImportExcel excelread = new ImportExcel();
         //manual path selection of import files, to be done
@@ -67,7 +72,7 @@ public class TradingApplication extends javax.swing.JFrame {
         ArrayList<String> listOfStockSymbols = excelread.importSymbolsFromPredefinedExcelFile(path2);
         return listOfStockSymbols;
     }
-    
+
     private double diffPercentage() {
         ImportExcel excelread = new ImportExcel();
         //manual path selection of import files, to be done
@@ -77,7 +82,7 @@ public class TradingApplication extends javax.swing.JFrame {
 
         return diffPercentage;
     }
-    
+
     private Object[][] addingValuesToArrays(ArrayList<String> listOfStockSymbols) throws JSONException, IOException {
         ConnectionToAPI connectionToAPI = new ConnectionToAPI();
         Object[][] mainDataArrays = new Object[listOfStockSymbols.size() + 1][5];
@@ -105,7 +110,7 @@ public class TradingApplication extends javax.swing.JFrame {
         }
         return mainDataArrays;
     }
-    
+
     private XSSFWorkbook makingWorkbook(Object[][] mainDataArrays) throws FileNotFoundException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Daily report from IEXTrading");
@@ -137,28 +142,28 @@ public class TradingApplication extends javax.swing.JFrame {
         }
         return workbook;
     }
-    
-    private void writtingExcelFile (XSSFWorkbook workbook) throws FileNotFoundException{
-    
-    try {
-                FileOutputStream outputStream = new FileOutputStream("C:\\Users\\Zarkovic\\Desktop\\StockReport_" + stringDate() + ".xlsx");
-                workbook.write(outputStream);
-                workbook.close();
-                System.out.println("File written successfully!");
-                log.addToLog("File written successfully!");
-                jButton3.setText("Done!");
-                jButton3.setEnabled(false);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                System.out.println("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
-                log.addToLog("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
-            } catch (IOException e) {
-                e.printStackTrace();
-                log.addToLog(e.getLocalizedMessage());
-            }
-    
+
+    private void writtingExcelFile(XSSFWorkbook workbook) throws FileNotFoundException {
+
+        try {
+            FileOutputStream outputStream = new FileOutputStream("C:\\Users\\Zarkovic\\Desktop\\StockReport_" + stringDate() + ".xlsx");
+            workbook.write(outputStream);
+            workbook.close();
+            System.out.println("File written successfully!");
+            log.addToLog("File written successfully!");
+            jButton3.setText("Done!");
+            jButton3.setEnabled(false);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
+            log.addToLog("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.addToLog(e.getLocalizedMessage());
+        }
+
     }
-    
+
     void mainMethod() throws FileNotFoundException {
 
         try {
@@ -176,15 +181,15 @@ public class TradingApplication extends javax.swing.JFrame {
             writtingExcelFile(workbook);
 
         } catch (FileNotFoundException ex) {
-            log.addToLog("Exception cought:"+ex);
+            log.addToLog("Exception cought:" + ex);
         } catch (JSONException ex) {
-            log.addToLog("Exception cought:"+ex);
+            log.addToLog("Exception cought:" + ex);
         } catch (IOException ex) {
-            log.addToLog("Exception cought:"+ex);
+            log.addToLog("Exception cought:" + ex);
         }
 
     }
-    
+
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -331,11 +336,27 @@ public class TradingApplication extends javax.swing.JFrame {
     }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
-        //to do
+
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        //to do
+        JFileChooser jfc = new JFileChooser();
+        jfc.showDialog(null, "Select path");
+        jfc.setVisible(true);
+        File filename = jfc.getSelectedFile();
+        if (filename.getName().equals("RunCriteria.xlsx")) {
+            path1 = filename.getPath();
+            jTextField1.setText(filename.getPath());
+            try {
+                log.addToLog("File name " + filename.getName() + " " + filename.getPath());
+            } catch (FileNotFoundException ex) {
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Please find RunCriteria.xlsx",
+                    "Wrong file selected",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -343,17 +364,31 @@ public class TradingApplication extends javax.swing.JFrame {
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        //to do
+        JFileChooser jfc = new JFileChooser();
+        jfc.showDialog(null, "Select path");
+        jfc.setVisible(true);
+        File filename = jfc.getSelectedFile();
+        if (filename.getName().equals("StockSymbols.xlsx")) {
+            path2 = filename.getPath();
+            jTextField2.setText(filename.getPath());
+            try {
+                log.addToLog("File name " + filename.getName() + " " + filename.getPath());
+            } catch (FileNotFoundException ex) {
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Please find StockSymbols.xlsx",
+                    "Wrong file selected",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         //to do
     }
-    
+
     public static void main(String args[]) {
-        
-        
-        
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new TradingApplication().setVisible(true);
