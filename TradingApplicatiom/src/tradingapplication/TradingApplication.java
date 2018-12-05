@@ -6,12 +6,14 @@
 package tradingapplication;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONException;
 
 /**
  *
@@ -67,6 +69,34 @@ public class TradingApplication extends javax.swing.JFrame {
         double diffPercentage = excelread.importDiffPercentageFromPredefinedExcelFile(path1);
 
         return diffPercentage;
+    }
+    
+    private Object[][] addingValuesToArrays(ArrayList<String> listOfStockSymbols) throws JSONException, IOException {
+        ConnectionToAPI connectionToAPI = new ConnectionToAPI();
+        Object[][] mainDataArrays = new Object[listOfStockSymbols.size() + 1][5];
+        //defining rows header - could be in another method
+        mainDataArrays[0][0] = "Symbol";
+        mainDataArrays[0][1] = "PDC";
+        mainDataArrays[0][2] = "SDO";
+        mainDataArrays[0][3] = "Difference";
+        mainDataArrays[0][4] = "Direction";
+        int br = 1;
+        //System.out.println("Size of a symbols list: " + listOfStockSymbols.size());
+        //adding values to 2d array
+        //making an object which hold data to be exported as Excel file
+        //using jdbctoapi class methods for getting response and parsing it to an objects
+        //passing id symbol and fixed difference percentage(?)
+        for (String s : listOfStockSymbols) {
+            Object[] helpArray;
+            helpArray = connectionToAPI.connectToAPIAndParseValues(s, diffPercentage());
+            if (helpArray[4] != "NO DATA") {
+                for (int i = 0; i < 5; i++) {
+                    mainDataArrays[br][i] = helpArray[i];
+                }
+                br++;
+            }
+        }
+        return mainDataArrays;
     }
     
     private void initComponents() {
