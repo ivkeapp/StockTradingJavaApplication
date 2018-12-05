@@ -11,8 +11,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONException;
 
 /**
@@ -97,6 +103,16 @@ public class TradingApplication extends javax.swing.JFrame {
             }
         }
         return mainDataArrays;
+    }
+    
+    private XSSFWorkbook makingWorkbook(Object[][] mainDataArrays) throws FileNotFoundException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Daily report from IEXTrading");
+
+        //init cell style
+        ExcelSheetCellStylesLibrary style = new ExcelSheetCellStylesLibrary();
+        
+        return workbook;
     }
     
     private void initComponents() {
