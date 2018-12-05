@@ -6,6 +6,7 @@
 package tradingapplication;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -135,6 +136,27 @@ public class TradingApplication extends javax.swing.JFrame {
             }
         }
         return workbook;
+    }
+    
+    private void writtingExcelFile (XSSFWorkbook workbook) throws FileNotFoundException{
+    
+    try {
+                FileOutputStream outputStream = new FileOutputStream("C:\\Users\\Zarkovic\\Desktop\\StockReport_" + stringDate() + ".xlsx");
+                workbook.write(outputStream);
+                workbook.close();
+                System.out.println("File written successfully!");
+                log.addToLog("File written successfully!");
+                jButton3.setText("Done!");
+                jButton3.setEnabled(false);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
+                log.addToLog("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
+            } catch (IOException e) {
+                e.printStackTrace();
+                log.addToLog(e.getLocalizedMessage());
+            }
+    
     }
     
     private void initComponents() {
