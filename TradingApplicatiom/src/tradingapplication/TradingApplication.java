@@ -67,7 +67,7 @@ public class TradingApplication extends javax.swing.JFrame {
     private ArrayList<String> listOfStockSymbols() {
         ImportExcel excelread = new ImportExcel();
         //manual path selection of import files, to be done
-        String path2 = jTextField2.getText();
+        String path1 = jTextField1.getText();
         //importing id symbols and putting it to list of strings
         ArrayList<String> listOfStockSymbols = excelread.importSymbolsFromPredefinedExcelFile(path2);
         return listOfStockSymbols;
@@ -76,7 +76,7 @@ public class TradingApplication extends javax.swing.JFrame {
     private double diffPercentage() {
         ImportExcel excelread = new ImportExcel();
         //manual path selection of import files, to be done
-        String path1 = jTextField2.getText();
+        String path2 = jTextField2.getText();
         //assuming that the difference percentage is fixed
         double diffPercentage = excelread.importDiffPercentageFromPredefinedExcelFile(path1);
 
@@ -343,19 +343,27 @@ public class TradingApplication extends javax.swing.JFrame {
         JFileChooser jfc = new JFileChooser();
         jfc.showDialog(null, "Select path");
         jfc.setVisible(true);
-        File filename = jfc.getSelectedFile();
-        if (filename.getName().equals("RunCriteria.xlsx")) {
-            path1 = filename.getPath();
-            jTextField1.setText(path1);
-            try {
-                log.addToLog("File name " + filename.getName() + " " + filename.getPath());
-            } catch (FileNotFoundException ex) {
+        try {
+            File filename = jfc.getSelectedFile();
+            if (filename.getName().equals("RunCriteria.xlsx")) {
+                path1 = filename.getPath();
+                jTextField1.setText(path1);
+                try {
+                    log.addToLog("File name " + filename.getName() + " " + filename.getPath());
+                } catch (FileNotFoundException ex) {
+                }
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Please find RunCriteria.xlsx",
+                        "Wrong file selected",
+                        JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    "Please find RunCriteria.xlsx",
-                    "Wrong file selected",
-                    JOptionPane.ERROR_MESSAGE);
+        } catch (NullPointerException e) {
+            try {
+                log.addToLog("Nothing is selected");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(TradingApplication.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -367,19 +375,27 @@ public class TradingApplication extends javax.swing.JFrame {
         JFileChooser jfc = new JFileChooser();
         jfc.showDialog(null, "Select path");
         jfc.setVisible(true);
-        File filename = jfc.getSelectedFile();
-        if (filename.getName().equals("StockSymbols.xlsx")) {
-            path2 = filename.getPath();
-            jTextField2.setText(path2);
-            try {
-                log.addToLog("File name " + filename.getName() + " " + filename.getPath());
-            } catch (FileNotFoundException ex) {
+        try {
+            File filename = jfc.getSelectedFile();
+            if (filename.getName().equals("StockSymbols.xlsx")) {
+                path2 = filename.getPath();
+                jTextField2.setText(path2);
+                try {
+                    log.addToLog("File name " + filename.getName() + " " + filename.getPath());
+                } catch (FileNotFoundException ex) {
+                }
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Please find StockSymbols.xlsx",
+                        "Wrong file selected",
+                        JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    "Please find StockSymbols.xlsx",
-                    "Wrong file selected",
-                    JOptionPane.ERROR_MESSAGE);
+        } catch (NullPointerException e) {
+            try {
+                log.addToLog("Nothing is selected");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(TradingApplication.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
