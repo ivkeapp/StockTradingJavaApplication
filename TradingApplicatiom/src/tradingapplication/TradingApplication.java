@@ -346,7 +346,7 @@ public class TradingApplication extends javax.swing.JFrame {
         File filename = jfc.getSelectedFile();
         if (filename.getName().equals("RunCriteria.xlsx")) {
             path1 = filename.getPath();
-            jTextField1.setText(filename.getPath());
+            jTextField1.setText(path1);
             try {
                 log.addToLog("File name " + filename.getName() + " " + filename.getPath());
             } catch (FileNotFoundException ex) {
@@ -370,7 +370,7 @@ public class TradingApplication extends javax.swing.JFrame {
         File filename = jfc.getSelectedFile();
         if (filename.getName().equals("StockSymbols.xlsx")) {
             path2 = filename.getPath();
-            jTextField2.setText(filename.getPath());
+            jTextField2.setText(path2);
             try {
                 log.addToLog("File name " + filename.getName() + " " + filename.getPath());
             } catch (FileNotFoundException ex) {
@@ -384,7 +384,21 @@ public class TradingApplication extends javax.swing.JFrame {
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-        //to do
+        if (!path1.equals("") && !path2.equals("")) {
+            mainLabel.setText("File saved!");
+            try {
+                mainMethod();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(TradingApplication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            log.writeLogToDisk();
+        } else {
+            mainLabel.setText("Please select correct files");
+            JOptionPane.showMessageDialog(null,
+                    "Please select filepaths",
+                    "Path is not selected",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public static void main(String args[]) {
