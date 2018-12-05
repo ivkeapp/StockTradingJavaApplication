@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -87,6 +89,40 @@ public class ConnectionToAPI {
         String StringPDC = result2.get("open").toString();
         Double SDO = Double.parseDouble(StringPDC);
         return SDO;
+    }
+    
+    private Object[] formulaMethod(String symbol, double PDC, double SDO, double DiffPercentage) throws FileNotFoundException {
+        if (SDO >= (PDC + (PDC * (DiffPercentage / 100)))) {
+            Double difference = (((SDO - PDC) / PDC) * 100);
+            //formating difference on two decimals
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+            difference = Double.parseDouble(df.format(difference));
+
+            Object[] object = new Object[]{symbol.toUpperCase(), PDC, SDO, difference, "UP"};
+
+            CustomLogger log = new CustomLogger();
+            log.addToLog("UP values added successfully!");
+            return object;
+        } else if (SDO <= (PDC - (PDC * (DiffPercentage / 100)))) {
+            Double difference = (((PDC - SDO) / PDC) * 100);
+            //formating difference on two decimals
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+            difference = Double.parseDouble(df.format(difference));
+
+            Object[] object = new Object[]{symbol.toUpperCase(), PDC, SDO, difference, "DOWN"};
+
+            CustomLogger log = new CustomLogger();
+            log.addToLog("DOWN values added successfully!");
+            log.addToLog(System.getProperty("line.separator"));
+            return object;
+
+        } else {
+            CustomLogger log = new CustomLogger();
+            log.addToLog(System.getProperty("line.separator"));
+            return new Object[]{symbol.toUpperCase(), 0, 0, 0, "NO DATA"};
+        }
     }
 
 }
