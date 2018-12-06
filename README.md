@@ -24,7 +24,7 @@ MSFT
 AAPL
 
 Output File (StockReport_YYYYMMDD.xlsx):
-Program is scheduled to run once in everyday and each run should create an output file named StockReport_YYYYMMDD.txt. (Where YYYYMMDD is the Year, Month, Day of the actual run date).
+Program is scheduled to run once in everyday and each run should create an output file named StockReport_YYYYMMDD.xlsx. (Where YYYYMMDD is the Year, Month, Day of the actual run date).
 May contain 1 to 99999 records in the output. Each record contains 5 fields.
 Symbol	 PDC	SDO	 Difference	 Direction
 GOOG	 112.27	 92.59	   -17.53	 DOWN
