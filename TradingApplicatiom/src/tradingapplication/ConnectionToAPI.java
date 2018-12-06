@@ -143,8 +143,6 @@ public class ConnectionToAPI {
                 Double SDO = gettingSDOValues(result);
                 System.out.println("Data imported");
 
-                //if(gettingSDOValues>gettingPDCValues){
-                //if (gettingSDOValues >= (gettingPDCValues + (gettingPDCValues * (DiffPercentage / 100)))) {
                 if (SDO > PDC) {
                     return formulaMethod(symbol, PDC, SDO, DiffPercentage);
                 } else {
@@ -156,16 +154,12 @@ public class ConnectionToAPI {
                 return new Object[]{symbol.toUpperCase(), 0, 0, 0, "NO DATA"};
             }
 
-        } catch (ParseException | FileNotFoundException e) {
-            e.printStackTrace();
+        } 
+        catch (ParseException | FileNotFoundException e) {
             CustomLogger log = new CustomLogger();
             log.addToLog("Error! File is not found");
             log.addToLog(e.getLocalizedMessage());
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            CustomLogger log = new CustomLogger();
-            log.addToLog(ioe.getLocalizedMessage());
-        }
+        } 
         //log.addToLog(System.getProperty("line.separator"));
         return new Object[]{symbol.toUpperCase(), 0, 0, 0, "NO DATA"};
     }
