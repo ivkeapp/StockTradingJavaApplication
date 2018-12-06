@@ -1,4 +1,3 @@
-
 package tradingapplication;
 
 import java.io.File;
@@ -13,9 +12,8 @@ import org.apache.poi.ss.usermodel.*;
  * @author Zarkovic
  */
 public class ImportExcel {
-    
-    
-     //importing difference percentage from selected path
+
+    //importing difference percentage from selected path
     public double importDiffPercentageFromPredefinedExcelFile(String path) {
         double differencePercentage = 0;
         try {
@@ -47,12 +45,10 @@ public class ImportExcel {
         }
         return differencePercentage;
     }
-    
-    //importing excel file with id symbols values as list
-    ArrayList<String> allSymbols = new ArrayList<String>();
 
     public ArrayList<String> importSymbolsFromPredefinedExcelFile(String path) {
-
+        //importing excel file with id symbols values as list
+        ArrayList<String> allSymbols = new ArrayList<>();
         try {
             Workbook workbook = WorkbookFactory.create(new File(path));
             //getting the sheet at index zero
