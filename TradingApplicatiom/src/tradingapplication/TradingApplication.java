@@ -103,6 +103,7 @@ public class TradingApplication extends javax.swing.JFrame {
         ConnectionToAPI connectionToAPI = new ConnectionToAPI();
         Object[][] mainDataArrays = new Object[listOfStockSymbols.size() + 1][5];
         new Thread("3") {
+            @Override
             public void run() {
                 System.out.println("Thread: " + getName() + " running");
                 //defining rows header - could be in another method
@@ -131,9 +132,7 @@ public class TradingApplication extends javax.swing.JFrame {
         for (String s : listOfStockSymbols) {
             Object[] helpArray = connectionToAPI.connectToAPIAndParseValues(s, differencePercentage);
             if (helpArray[4] != "NO DATA") {
-                for (int i = 0; i < 5; i++) {
-                    mainDataArrays[br][i] = helpArray[i];
-                }
+                System.arraycopy(helpArray, 0, mainDataArrays[br], 0, 5);
                 br++;
             }
         }
@@ -146,7 +145,7 @@ public class TradingApplication extends javax.swing.JFrame {
 
         //init cell style
         ExcelSheetCellStylesLibrary style = new ExcelSheetCellStylesLibrary();
-        Map<String, CellStyle> styles = style.createStyles(workbook);
+        Map<String, CellStyle> styles = ExcelSheetCellStylesLibrary.createStyles(workbook);
 
         int rowNum = 0;
         System.out.println("Writing Excel file...");
@@ -183,11 +182,9 @@ public class TradingApplication extends javax.swing.JFrame {
             jButton3.setText("Done!");
             jButton3.setEnabled(false);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             System.out.println("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
             log.addToLog("FAILED! The process cannot access the file because it is being used by another process or file is missing.");
         } catch (IOException e) {
-            e.printStackTrace();
             log.addToLog(e.getLocalizedMessage());
         }
 
@@ -211,9 +208,7 @@ public class TradingApplication extends javax.swing.JFrame {
 
         } catch (FileNotFoundException ex) {
             log.addToLog("Exception cought:" + ex);
-        } catch (JSONException ex) {
-            log.addToLog("Exception cought:" + ex);
-        } catch (IOException ex) {
+        } catch (JSONException | IOException ex) {
             log.addToLog("Exception cought:" + ex);
         }
 
@@ -448,10 +443,8 @@ public class TradingApplication extends javax.swing.JFrame {
 
     public static void main(String args[]) {
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TradingApplication().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new TradingApplication().setVisible(true);
         });
     }
 }
