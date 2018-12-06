@@ -38,7 +38,7 @@ Direction: UP or DOWN (If SDO > PDC then ‘UP’ else ‘DOWN’)
 Main Processing Logic:
 1. Read the InputFile-1 (RunCriteria.xlsx file) and get the value of ‘DiffPercentage’.
 2. Open the Output File (StockReport_YYYYMMDD.xlsx).
-3. Read and process all the records in the InputFile-2 (StockSymbols.txt) as below:
+3. Read and process all the records in the InputFile-2 (StockSymbols.xlsx) as below:
 3A. Read the first record in the InputFile-2 
 3B. Call the API (See details below) using the ‘Symbol’ read in STEP-2a and get the
  PDC (Previous Day Closing) & SDO (Same Day Open) prices for that stock.
