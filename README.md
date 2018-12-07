@@ -1,5 +1,5 @@
 # StockTradingJavaApplication
-Simple Java program for calculating difference percentage for specific companies symbols list inExcel Sheet and with static criteria
+Simple Java program for calculating difference percentage for specific companies symbols list in Excel Sheet and with static criteria
 
 It was request from client. I'm copying entire task:
 
